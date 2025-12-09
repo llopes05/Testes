@@ -1,0 +1,26 @@
+# Arquivos de build e dependências
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Maven
+.mvn/
+mvnw
+mvnw.cmd
+
+# Karate
+karate-config-*.js
