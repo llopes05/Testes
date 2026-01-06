@@ -10,22 +10,27 @@ class TestRunner {
     }
     
     @Karate.Test
-    Karate testTodos() {
-        return Karate.run("todos").relativeTo(getClass());
+    Karate testUsuarios() {
+        return Karate.run("usuarios").relativeTo(getClass());
     }
     
     @Karate.Test
-    Karate testPosts() {
-        return Karate.run("posts").relativeTo(getClass());
+    Karate testCentros() {
+        return Karate.run("centros").relativeTo(getClass());
     }
     
     @Karate.Test
-    Karate testUsers() {
-        return Karate.run("users").relativeTo(getClass());
+    Karate testEspacos() {
+        return Karate.run("espacos").relativeTo(getClass());
     }
     
     @Karate.Test
-    Karate testComments() {
-        return Karate.run("comments").relativeTo(getClass());
+    Karate testAgendas() {
+        return Karate.run("agendas").relativeTo(getClass());
+    }
+    
+    @Karate.Test
+    Karate testReservas() {
+        return Karate.run("reservas").relativeTo(getClass());
     }
 }
