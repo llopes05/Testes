@@ -1,181 +1,169 @@
-# 🧪 Oficina: Testes de API com Karate Framework
-**Hands-On | Aprenda na Prática**
+# 🏟️ Sistema de Reservas de Espaços Esportivos - Testes de API
+
+**Testes automatizados com Karate Framework para API REST Django**
 
 ---
 
-## 🎯 O que é Karate?
-Framework Open Source para testes de API em **linguagem Gherkin** (BDD).  
-📚 [Documentação Oficial](https://github.com/karatelabs/karate) | [Mais detalhes](https://karatelabs.github.io/karate/)
+## 📋 Sobre o Projeto
 
-**Por que usar?**
-- ✅ Sintaxe simples (sem programação complexa)
-- ✅ Relatórios HTML automáticos
-- ✅ Validações poderosas em JSON
-- ✅ Fácil de aprender e usar
+Este projeto contém testes de API automatizados para um **Sistema de Reservas de Espaços Esportivos**, desenvolvido com:
+
+- **Backend:** Django REST Framework com autenticação JWT (SimpleJWT)
+- **Testes:** Karate Framework 1.4.1 com JUnit 5
+- **Build:** Maven 3.6+
 
 ---
 
-## 🚀 PASSO A PASSO - Tutorial Hands-On
+## 🎯 O que é testado?
 
-### **PASSO 1: Verificar Pré-requisitos**
-Abra o terminal e execute:
+| Feature | Descrição | Cenários |
+|---------|-----------|----------|
+| `usuarios.feature` | Cadastro e autenticação de usuários | Registro, login, validação de credenciais |
+| `centros.feature` | CRUD de centros esportivos | Listar, criar, validar estrutura |
+| `espacos.feature` | CRUD de espaços esportivos | Listar, criar por centro, validar categorias |
+| `agendas.feature` | CRUD de agendas/horários | Listar, criar, validar disponibilidade |
+| `reservas.feature` | CRUD de reservas | Listar, criar, cancelar reservas |
+
+---
+
+## 🚀 Pré-requisitos
+
 ```bash
-java -version    # Deve mostrar Java 11+
-mvn -version     # Deve mostrar Maven 3.6+
+java -version    # Java 11+
+mvn -version     # Maven 3.6+
+python --version # Python 3.10+ (para o backend)
 ```
 
-
-
 ---
 
-### **PASSO 2: Clonar o Projeto**
-```bash
-git clone https://github.com/llopes05/Testes.git
-cd Testes
-```
-
----
-
-### **PASSO 3: Entender a Estrutura**
+## 📁 Estrutura do Projeto
 
 ```
 Testes/
-├── pom.xml                    # Configuração Maven (dependências)
+├── pom.xml                          # Configuração Maven
+├── backend/                         # API Django
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── popular_banco.py             # Script para popular o banco
+│   └── reservaapp/                  # App principal
 └── src/test/java/
-    ├── karate-config.js       # URL base da API
+    ├── karate-config.js             # Configuração (URL, credenciais)
     └── features/
-        ├── todos.feature      # ⭐ Testes de Tarefas
-        ├── posts.feature      # Testes de Posts
-        └── TestRunner.java    # Executor dos testes
+        ├── auth-helper.feature      # Helper de autenticação
+        ├── usuarios.feature         # Testes de usuários
+        ├── centros.feature          # Testes de centros esportivos
+        ├── espacos.feature          # Testes de espaços
+        ├── agendas.feature          # Testes de agendas
+        ├── reservas.feature         # Testes de reservas
+        └── TestRunner.java          # Executor JUnit
 ```
-
-**Foco:** Arquivo `.feature` = onde escrevemos os testes!
 
 ---
 
-### **PASSO 4: Entender e Praticar!**
+## ⚙️ Configuração
 
-**Agora vamos explorar os testes prontos!** 
-
-Abra o arquivo `src/test/java/features/users.feature` e veja os testes:
-
-#### 🎯 **Teste 1: Validar que o usuário 1 se chama "Leanne Graham"**
-```gherkin
-Scenario: Validar nome do usuário 1
-  Given path 'users', 1
-  When method get
-  Then status 200
-  
-  # Valida o nome completo
-  And match response.name == 'Leanne Graham'
-  And match response.username == 'Bret'
-  And match response.email == 'Sincere@april.biz'
-  
-  # Valida estrutura completa
-  And match response.address.street == 'Kulas Light'
-  And match response.address.city == 'Gwenborough'
-  And match response.company.name == 'Romaguera-Crona'
-  
-  * print response
-```
-
-#### ❌ **Teste 2: Validar um nome ERRADO (deve falhar de propósito)**
-```gherkin
-Scenario: Verificar se o nome NÃO é Jorge Alberto (teste negativo)
-  Given path 'users', 1
-  When method get
-  Then status 200
-  
-  # Este teste vai FALHAR pois o nome real é "Leanne Graham"
-  And match response.name != 'Jorge Alberto'
-  
-  # Prova que o nome correto é outro
-  And match response.name == 'Leanne Graham'
-```
-
-#### 📝 **Agora é sua vez!**
-Execute os testes e veja os resultados:
+### 1. Iniciar o Backend
 
 ```bash
-# Executar testes de usuários
-mvn test -Dtest=TestRunner#testUsers
+cd backend
+pip install -r requirements.txt
+python popular_banco.py    # Popular banco com dados de teste
+python manage.py runserver
 ```
 
-**O que você vai ver:**
-- ✅ Primeiro teste PASSA (nome correto)
-- ✅ Segundo teste PASSA (nome é diferente de Jorge Alberto)
-- 📊 Dados completos do usuário no console
+### 2. Configurar Credenciais
+
+Edite `src/test/java/karate-config.js`:
+
+```javascript
+config.baseUrl = 'http://localhost:8000/api';
+config.gerenteEmail = 'gerente@teste.com';
+config.gerentePassword = '12345678';
+config.organizadorEmail = 'organizador@teste.com';
+config.organizadorPassword = '12345678';
+```
 
 ---
 
-### **PASSO 5: Executar os Testes**
+## ▶️ Executar os Testes
 
 ```bash
-# Executar todos os testes
+# Executar todos os testes (62 cenários)
 mvn test
 
-# Executar apenas produtos
-mvn test -Dtest=TestRunner#testProdutos
+# Executar testes específicos
+mvn test -Dtest=TestRunner#testUsuarios
+mvn test -Dtest=TestRunner#testCentros
+mvn test -Dtest=TestRunner#testEspacos
+mvn test -Dtest=TestRunner#testAgendas
+mvn test -Dtest=TestRunner#testReservas
+
+# Limpar e executar
+mvn clean test
 ```
 
 **Resultado esperado:**
 ```
-Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
+Tests run: 62, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 ---
 
-### **PASSO 6: Ver o Relatório HTML**
+## 📊 Relatórios
 
-Abra no navegador:
-```bash
+Após executar os testes, abra no navegador:
+
+```
 target/karate-reports/karate-summary.html
 ```
 
-📊 **Você verá:**
-- ✅ Testes passou/falhou
+📈 **O relatório mostra:**
+- ✅ Status de cada cenário (passou/falhou)
 - 🕒 Tempo de execução
 - 📝 Request/Response detalhados
-- 📸 Screenshots (se configurado)
+- 🔍 Erros e stack traces
 
 ---
 
-### **PASSO 7: Explore Mais Testes!**
+## 🧪 Exemplos de Testes
 
-**Teste outros cenários prontos:**
-
-```bash
-# Testar Todos (tarefas)
-mvn test -Dtest=TestRunner#testTodos
-
-# Testar Posts
-mvn test -Dtest=TestRunner#testPosts
-
-# Testar Comments
-mvn test -Dtest=TestRunner#testComments
+### Autenticação (Login)
+```gherkin
+Scenario: Login como gerente
+  Given url baseUrl + '/login'
+  And request { email: '#(gerenteEmail)', password: '#(gerentePassword)' }
+  When method post
+  Then status 200
+  And match response.access == '#string'
 ```
 
-**Desafios para praticar:**
-
-1. **Modifique o teste de usuários:**
-   - Teste se o usuário 2 se chama "Ervin Howell"
-   - Teste se o email contém "@"
-   - Teste se o telefone existe
-
-2. **Crie um teste de falha:**
-   - Busque o usuário 999 (não existe)
-   - Verifique se retorna status 404
-
-3. **Teste a tarefa 1:**
-   - Verifique se o título é "delectus aut autem"
-   - Verifique se está incompleta (completed = false)
-
-**Exemplo de teste de erro:**
+### Criar Centro Esportivo
 ```gherkin
-Scenario: Validar usuário inexistente
-  Given path 'users', 999
+Scenario: Criar centro esportivo com autenticação
+  Given path 'centros-esportivos'
+  And header Authorization = 'Bearer ' + tokenGerente
+  And request 
+    """
+    {
+      "nome": "Centro Esportivo Novo",
+      "cidade": "São Paulo",
+      "UF": "SP"
+    }
+    """
+  When method post
+  Then status 201
+  And match response.id == '#number'
+```
+
+### Listar Espaços
+```gherkin
+Scenario: Listar espaços esportivos
+  Given path 'espacos'
+  And header Authorization = 'Bearer ' + tokenGerente
   When method get
-  Then status 404
+  Then status 200
+  And match response == '#array'
+  And match each response contains { id: '#number', nome: '#string' }
 ```
 
 ---
@@ -183,78 +171,72 @@ Scenario: Validar usuário inexistente
 ## 🎓 Principais Validações Karate
 
 ```gherkin
-# Validar status HTTP
+# Status HTTP
 Then status 200
+Then status 201
+Then status 401
 
-# Validar valor exato
-And match response.id == 1
+# Valor exato
+And match response.nome == 'Centro Esportivo'
 
-# Validar tipo de dado
+# Tipo de dado
+And match response.id == '#number'
 And match response.nome == '#string'
-And match response.preco == '#number'
 And match response.ativo == '#boolean'
 
-# Validar array
+# Arrays
 And match response == '#array'
-And match response == '#[10]'        # Exatamente 10 itens
-And match response == '#[_ > 0]'     # Pelo menos 1 item
+And match response == '#[5]'           # Exatamente 5 itens
 
-# Validar objeto completo
-And match response == 
-  """
-  {
-    id: '#number',
-    nome: '#string',
-    preco: '#number'
-  }
-  """
+# Objeto parcial
+And match response contains { id: '#number' }
 
-# Validar cada item do array
-And match each response contains { ativo: true }
+# Cada item do array
+And match each response contains { id: '#number', nome: '#string' }
 
-# Validar com regex
+# Regex
 And match response.email == '#regex .+@.+\\..+'
+
+# Presente/ausente
+And match response.token == '#present'
+And match response.error == '#notpresent'
 ```
 
 ---
 
-## 🔧 Comandos Úteis
+## 🔧 Endpoints da API
 
-```bash
-# Executar testes
-mvn test
-
-# Limpar e executar
-mvn clean test
-
-# Executar feature específica
-mvn test -Dtest=TestRunner#testProdutos
-
-# Ver logs detalhados
-mvn test -X
-
-# Executar em ambiente específico
-mvn test -Dkarate.env=dev
-```
+| Método | Endpoint | Descrição | Auth |
+|--------|----------|-----------|------|
+| POST | `/api/login` | Login (retorna JWT) | ❌ |
+| POST | `/api/register` | Registrar usuário | ❌ |
+| GET | `/api/centros-esportivos` | Listar centros | ✅ |
+| POST | `/api/centros-esportivos` | Criar centro | ✅ |
+| GET | `/api/espacos` | Listar espaços | ✅ |
+| POST | `/api/espacos` | Criar espaço | ✅ |
+| GET | `/api/agendas` | Listar agendas | ✅ |
+| POST | `/api/agendas` | Criar agenda | ✅ |
+| GET | `/api/reservas` | Listar reservas | ✅ |
+| POST | `/api/reservas` | Criar reserva | ✅ |
 
 ---
 
-## 💡 Dicas Finais
+## 💡 Dicas
 
 - 🐛 Use `* print response` para debug
-- 📝 Comece com testes simples (GET) e evolua
-- 🔄 Reutilize cenários com `Background`
-- 📊 Sempre confira o relatório HTML
-- 🎯 Pratique criando seus próprios cenários
+- 🔄 O `Background` executa antes de cada cenário
+- 📝 Use `auth-helper.feature` para reutilizar autenticação
+- 🎯 Nomes de recursos são gerados com UUID para evitar duplicatas
+- 📊 Sempre confira o relatório HTML após os testes
 
 ---
 
-## 📚 Recursos Adicionais
+## 📚 Recursos
 
-- [Karate Docs](https://github.com/karatelabs/karate)
-- [Karate Examples](https://github.com/karatelabs/karate/tree/master/karate-demo)
-- [JSONPlaceholder API](https://jsonplaceholder.typicode.com/) (para praticar)
+- [Karate Framework](https://github.com/karatelabs/karate)
+- [Django REST Framework](https://www.django-rest-framework.org/)
+- [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/)
 
 ---
 
-**Boa oficina! 🚀**
+**🚀 Bons testes!**

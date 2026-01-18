@@ -38,7 +38,7 @@ schema_view = get_schema_view(
 )
 
 #Routers
-router = DefaultRouter()
+router = DefaultRouter(trailing_slash=False)
 router.register(r'centros-esportivos', CentroEsportivoViewSet, basename='espacos-esportivos')
 router.register(r'espacos', EspacoEsportivoViewSet)
 router.register(r'agendas', AgendaViewSet)
@@ -54,22 +54,20 @@ urlpatterns = [
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
-    #urls das views
-    path('api/register/', CustomUserCreateView.as_view(), name='register'),
-    path('api/login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/me/', MeView.as_view(), name='me'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    #urls das views - sem barra final para compatibilidade com Karate
+    path('api/register', CustomUserCreateView.as_view(), name='register'),
+    path('api/login', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/me', MeView.as_view(), name='me'),
+    path('api/token/refresh', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/', include(router.urls)),
-    path('api/centros/<int:pk>/', Centro_com_espacosRetrieveView.as_view(), name='centro-com-espacos'),
-    path('api/check-email/', VerificarEmailView.as_view(), name='verificar-email'),
-    path('api/reservar/', ReservaCreateview.as_view(), name='reservar'),
-    path('api/me/centros/', MeuCentroEsportivoView.as_view(), name='meu-centro-esportivo'),
-     path('api/reservas/<int:pk>/cancelar/', CancelarReservaView.as_view(), name='cancelar-reserva'),
-    path('api/reservas/<int:pk>/concluir/', ConcluirReservaView.as_view(), name='concluir-reserva'),
-    path('api/check-email/', VerificarEmailView.as_view(), name='verificar-email'),
-    path('api/espacos/<int:espaco_id>/horarios_disponiveis/', HorariosDisponiveisView.as_view(), name='horarios_disponiveis'),
-    path('api/reservar/', ReservaCreateview.as_view(), name='reservar'),
-    path('api/estatisticas-gerente/', EstatisticasGerenteView.as_view(), name='estatisticas-gerente'),
+    path('api/centros/<int:pk>', Centro_com_espacosRetrieveView.as_view(), name='centro-com-espacos'),
+    path('api/check-email', VerificarEmailView.as_view(), name='verificar-email'),
+    path('api/reservar', ReservaCreateview.as_view(), name='reservar'),
+    path('api/me/centros', MeuCentroEsportivoView.as_view(), name='meu-centro-esportivo'),
+    path('api/reservas/<int:pk>/cancelar', CancelarReservaView.as_view(), name='cancelar-reserva'),
+    path('api/reservas/<int:pk>/concluir', ConcluirReservaView.as_view(), name='concluir-reserva'),
+    path('api/espacos/<int:espaco_id>/horarios_disponiveis', HorariosDisponiveisView.as_view(), name='horarios_disponiveis'),
+    path('api/estatisticas-gerente', EstatisticasGerenteView.as_view(), name='estatisticas-gerente'),
 ]
 
 if settings.DEBUG:

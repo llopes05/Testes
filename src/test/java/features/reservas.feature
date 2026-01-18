@@ -10,7 +10,7 @@ Feature: Testes de Reservas - API Reserva
     * def tokenGerente = loginGer.token
 
   Scenario: Listar minhas reservas
-    Given path 'minhas-reservas/'
+    Given path 'minhas-reservas'
     And header Authorization = 'Bearer ' + tokenOrganizador
     When method get
     Then status 200
@@ -20,14 +20,15 @@ Feature: Testes de Reservas - API Reserva
 
   Scenario: Criar reserva com sucesso
     # Primeiro obtém uma agenda ativa
-    Given path 'agendas/'
+    Given path 'agendas'
+    And header Authorization = 'Bearer ' + tokenGerente
     When method get
     Then status 200
     * def agendasAtivas = karate.filter(response, function(x){ return x.status == 'ativo' })
     * def agendaId = agendasAtivas[0].id
     
     # Cria a reserva
-    Given path 'reservar/'
+    Given path 'reservar'
     And header Authorization = 'Bearer ' + tokenOrganizador
     And request { agenda: #(agendaId) }
     When method post
@@ -39,13 +40,13 @@ Feature: Testes de Reservas - API Reserva
     * print 'Reserva criada com ID:', response.id
 
   Scenario: Criar reserva sem autenticação (deve falhar)
-    Given path 'reservar/'
+    Given path 'reservar'
     And request { agenda: 1 }
     When method post
     Then status 401
 
   Scenario: Validar schema de reserva
-    Given path 'minhas-reservas/'
+    Given path 'minhas-reservas'
     And header Authorization = 'Bearer ' + tokenOrganizador
     When method get
     Then status 200
@@ -55,12 +56,12 @@ Feature: Testes de Reservas - API Reserva
     * if (temReservas) karate.match(response[0], { id: '#number', status: '#string', agenda: '#object' })
 
   Scenario: Listar reservas sem autenticação (deve falhar)
-    Given path 'minhas-reservas/'
+    Given path 'minhas-reservas'
     When method get
     Then status 401
 
   Scenario Outline: Validar status possíveis de reserva
-    Given path 'minhas-reservas/'
+    Given path 'minhas-reservas'
     And header Authorization = 'Bearer ' + tokenOrganizador
     When method get
     Then status 200

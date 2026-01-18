@@ -29,6 +29,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# Desabilita redirecionamento automático para URLs com barra final
+# Necessário para testes com Karate
+APPEND_SLASH = False
+
 # CORS Configuration
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",

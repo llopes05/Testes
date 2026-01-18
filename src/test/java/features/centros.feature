@@ -7,7 +7,8 @@ Feature: Testes de Centros Esportivos - API Reserva
     * def tokenGerente = loginResult.token
 
   Scenario: Listar todos os centros esportivos
-    Given path 'centros-esportivos/'
+    Given path 'centros-esportivos'
+    And header Authorization = 'Bearer ' + tokenGerente
     When method get
     Then status 200
     
@@ -16,12 +17,14 @@ Feature: Testes de Centros Esportivos - API Reserva
 
   Scenario: Consultar centro esportivo específico
     # Primeiro lista para pegar um ID válido
-    Given path 'centros-esportivos/'
+    Given path 'centros-esportivos'
+    And header Authorization = 'Bearer ' + tokenGerente
     When method get
     Then status 200
     * def centroId = response[0].id
     
-    Given path 'centros/', centroId, '/'
+    Given path 'centros', centroId
+    And header Authorization = 'Bearer ' + tokenGerente
     When method get
     Then status 200
     
@@ -32,12 +35,13 @@ Feature: Testes de Centros Esportivos - API Reserva
     And match response contains { espacos: '#array' }
 
   Scenario: Criar centro esportivo com autenticação
-    Given path 'centros-esportivos/'
+    * def nomeUnico = 'Centro Karate ' + java.util.UUID.randomUUID().toString().substring(0,8)
+    Given path 'centros-esportivos'
     And header Authorization = 'Bearer ' + tokenGerente
     And request 
       """
       {
-        "nome": "Centro Karate Teste",
+        "nome": "#(nomeUnico)",
         "descricao": "Centro criado pelo teste Karate",
         "latitude": -23.55052,
         "longitude": -46.633308,
@@ -49,13 +53,13 @@ Feature: Testes de Centros Esportivos - API Reserva
     Then status 201
     
     And match response.id == '#number'
-    And match response.nome == 'Centro Karate Teste'
+    And match response.nome == nomeUnico
     And match response.cidade == 'São Paulo'
     
     * print 'Centro criado com ID:', response.id
 
   Scenario: Criar centro esportivo sem autenticação (deve falhar)
-    Given path 'centros-esportivos/'
+    Given path 'centros-esportivos'
     And request 
       """
       {
@@ -71,7 +75,8 @@ Feature: Testes de Centros Esportivos - API Reserva
     Then status 401
 
   Scenario: Validar schema de centro esportivo
-    Given path 'centros-esportivos/'
+    Given path 'centros-esportivos'
+    And header Authorization = 'Bearer ' + tokenGerente
     When method get
     Then status 200
     

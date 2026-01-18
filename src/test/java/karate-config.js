@@ -10,10 +10,10 @@ function fn() {
     baseUrl: 'http://localhost:8000/api',
     apiTimeout: 10000,
     // Credenciais de teste
-    gerenteEmail: 'gerente1@email.com',
-    gerentePassword: 'senha123',
-    organizadorEmail: 'org1@email.com',
-    organizadorPassword: 'senha123'
+    gerenteEmail: 'gerente@teste.com',
+    gerentePassword: '12345678',
+    organizadorEmail: 'organizador@teste.com',
+    organizadorPassword: '12345678'
   };
   
   // Configurações específicas por ambiente
