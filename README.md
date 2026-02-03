@@ -236,6 +236,7 @@ And match response.error == '#notpresent'
 - [Karate Framework](https://github.com/karatelabs/karate)
 - [Django REST Framework](https://www.django-rest-framework.org/)
 - [Simple JWT](https://django-rest-framework-simplejwt.readthedocs.io/)
+- [Nosso vídeo](https://www.youtube.com/watch?v=xz1TH-zi2Ew&list=LL&index=1)
 
 ---
 
